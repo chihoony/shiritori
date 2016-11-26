@@ -13,15 +13,15 @@ module Shiritori where
 
 -- INTRUCTIONS: READFIRST!
 
----- PLAY 
+---- PLAY
 
 -- start the game
-play genre difficulty = 
-    do 
+play genre difficulty =
+    do
         putStrLn "Play first? 0=no, 1=yes"
         line <- getLine
         if (read line :: Int) == 1
-        then 
+        then
             player_play (shiritori Start (choose genre)) difficulty
         else if (read line :: Int) == 0
             then
@@ -37,11 +37,11 @@ player_play (ContinueGame state avail) difficulty =
         computer_play (shiritori (Move (read line :: AMove) state) avail) difficulty
 
 -- TODO : choose move depending on difficulty, call player_play to continue game
-computer_play (ContinueGame state avail) difficulty = 
+computer_play (ContinueGame state avail) difficulty =
     do
         putStrLn ("fjdkslf")
 
----- SHIRITORI 
+---- SHIRITORI
 
 -- a move for a player
 type AMove = String
@@ -63,7 +63,7 @@ shiritori (Move move moves) lst
 choose genre
     | genre == "countries" = loc
     | genre == "animals" = loa
-    | otherwise = low 
+    | otherwise = low
 
 -- test if cheating
 cheat move moves lst = True
@@ -95,51 +95,108 @@ loel = ['a','c','d','e','i','m','n','o','p','s','t']
 lohl :: [Char]
 lohl = ['b','f','g','h','j','k','l','q','r','u','v','w','x','y','z']
 
+-- Returns the Cheater text
+cheater = "CheaterFound"
 
 -- FUNCTIONS
 
--- shiritoriEasy listofwordsUsed dictionary word
+-- shiritoriEasy (ContinueGame louw dict)
 -- Returns an unused easy word from the dictionary corresponding to the beginning letter
 -- of the word given.
--- shiritoriEasy (h:t) dict word
---   -- TODO return of cheater is currently set to False
---   |h == word = False
---   |
+-- ContinueGame = (CountinueGame [where first word is the given word] [])
+-- TODO: ALSO remember to put in the given computer word into the list of used words.
 
--- shiritoriHard lowu dict word
--- shiritoriHard lowu dict word
+shiritoriEasy (ContinueGame (h:t) dict)
+  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryEasy dict h (h:t)) = if null x then "YOUWIN" else head x
+  | otherwise = cheater
+
+-- test:
+-- shiritoriEasy (ContinueGame ["hello","hellb"]                                          ["hello","hellb","back","ohman"])
+-- shiritoriEasy (ContinueGame ["ohmah","hellb","hellf","hello","hella","hellj","helld"]  ["ohmah","hellb","hellf","hello","hella","hellj","helld","hii","hia","hiz","hiw","his","hig","hir","hiq"])
+
+-- Failing Tests:
+-- ALREADY USED WORD                = responds with a "CheaterFound"
+-- shiritoriEasy (ContinueGame ["hello","hellb", "hello"] ["hello","hellb","back","ohman"])
+-- NOT IN DICTIONARY                = responds with a "CheaterFound"
+-- shiritoriEasy (ContinueGame ["hello","hellb"]          ["hellb","back","ohman"])
+-- DICT HAS NO RESPONSE             = responds with a "YOUWIN"
+-- shiritoriEasy (ContinueGame ["hello","hellb"]          ["hello","hellb","back"])
+-- DICT HAS NO EASY RESPONSE        = responds with a "YOUWIN"
+-- shiritoriEasy (ContinueGame ["hello","hellb"]          ["hello","hellb","back","ohmah"])
+
+-- shiritoriHard (ContinueGame louw dict)
+-- Returns an unused hard word from the dictionary corresponding to the beginning letter
+-- of the word given.
+
+shiritoriHard (ContinueGame (h:t) dict)
+  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryHard dict h (h:t)) = if null x then "YOUWIN" else head x
+  | otherwise = cheater
+
+-- test:
+-- shiritoriHard (ContinueGame ["hello","hellb"]                                          ["hello","hellb","back","ohmaz"])
+-- shiritoriHard (ContinueGame ["ohmah","hellb","hellf","hello","hella","hellj","helld"]  ["ohmah","hellb","hellf","hello","hella","hellj","helld","hii","hia","hiz","hiw","his","hig","hir","hiq"])
+
+-- Failing Tests:
+-- ALREADY USED WORD            = responds with a "CheaterFound"
+-- shiritoriHard (ContinueGame ["hello","hellb", "hello"]   ["hello","hellb","back","ohman"])
+-- NOT IN DICTIONARY            = responds with a "CheaterFound"
+-- shiritoriHard (ContinueGame ["hello","hellb"]            ["hellb","back","ohman"])
+-- DICT HAS NO RESPONSE         = responds with a "YOUWIN"
+-- shiritoriHard (ContinueGame ["hello","hellb"]            ["hello","hellb","back"])
+-- DICT HAS NO HARD RESPONSE    = responds with a "YOUWIN"
+-- shiritoriHard (ContinueGame ["hello","hellb"]            ["hello","hellb","back","ohma"])
 
 
--- checkWordUsed listofwordsUsed word
+
+-- checkWordUsed listofUsedWords word
 -- Returns False if the word has been used, otherwise returns True
+checkWordUsed _ [] = False
 checkWordUsed [] _ = True
-checkWordUsed (h:t) word
-  | h == word = False
-  | otherwise = checkWordUsed t word
+checkWordUsed louw word
+  | word `elem` louw = False
+  | otherwise = True
 
 -- checkWordInDictionary dict word
 -- Returns False if the word is not in the specific dictionary genre, otherwise
 -- returns True
 checkWordInDictionary [] _ = False
-checkWordInDictionary (h:t) word
-  | h == word = True
-  | otherwise = checkWordInDictionary t word
+checkWordInDictionary dict word
+  | word `elem` dict = True
+  | otherwise = False
 
--- checkLastLetterMatchEasy word
+-- checkLastLetterMatchEasy dictword
 -- Returns True if the last letter matches the easy difficulty level letters
-checkLastLetterMatchEasy word
-  | (last word) `elem` loel = True
+checkLastLetterMatchEasy [] = False
+checkLastLetterMatchEasy dictword
+  | last dictword `elem` loel = True
   | otherwise = False
 
--- checkLastLetterMatchHard word
+-- checkLastLetterMatchHard dictword
 -- Returns True if the last letter matches the hard difficulty level letters
-checkLastLetterMatchHard word
-  |(last word) `elem` lohl = True
+checkLastLetterMatchHard [] = False
+checkLastLetterMatchHard dictword
+  | last dictword `elem` lohl = True
   | otherwise = False
 
--- checkFirstLetterMatch dictWord Word
--- returns True if the first letter matches otherwise false
-checkFirstLetterMatch [] _ = False
-checkFirstLetterMatch (h1:_) (h2:_)
-  | h1 == h2 = True
+-- checkFirstLetterMatchLastLetter dictWord word
+-- returns True if the last letter of the given word matches the first letter of the dictword
+checkFirstLetterMatchLastLetter [] _ = False
+checkFirstLetterMatchLastLetter (h:_) word
+  | last word == h = True
   | otherwise = False
+
+-- findWordsInDictionaryEasy dict word listofUsedWords
+-- Returns a list which every element begins with a word that starts with the
+-- 'letter' in the 'dict' corresponding to the easy diffculty constraint and has not been used before
+findWordsInDictionaryEasy dict word louw = [x | x <- dict, checkFirstLetterMatchLastLetter x word, checkLastLetterMatchEasy x, checkWordUsed louw x]
+
+-- test:
+-- findWordsInDictionaryEasy ["ohman","hellb","hellf","hello","hella","hellj","helld"] "ohmah" ["ohmah","hellb"]
+
+-- FindWordsInDictionaryHard dict word listofUsedWords
+-- Returns a list which every element begins with a word that starts with the
+-- 'letter' in the 'dict' corresponding to the hard diffculty constraint and has not been used before
+findWordsInDictionaryHard dict word louw = [x | x <- dict, checkFirstLetterMatchLastLetter x word, checkLastLetterMatchHard x, checkWordUsed louw x]
+
+-- test:
+-- findWordsInDictionaryHard ["ohman","hellb","hellf","hello","hella","hellj","helld"] "ohmah" ["ohmah","hellb"]
