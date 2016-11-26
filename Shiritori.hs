@@ -98,6 +98,9 @@ lohl = ['b','f','g','h','j','k','l','q','r','u','v','w','x','y','z']
 -- Returns the Cheater text
 cheater = "CheaterFound"
 
+-- Returns the Computer loses text
+computerlose = "PlayerWins"
+
 -- FUNCTIONS
 
 -- shiritoriEasy (ContinueGame louw dict)
@@ -107,7 +110,7 @@ cheater = "CheaterFound"
 -- TODO: ALSO remember to put in the given computer word into the list of used words.
 
 shiritoriEasy (ContinueGame (h:t) dict)
-  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryEasy dict h (h:t)) = if null x then "YOUWIN" else head x
+  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryEasy dict h (h:t)) = if null x then computerlose else head x
   | otherwise = cheater
 
 -- test:
@@ -129,7 +132,7 @@ shiritoriEasy (ContinueGame (h:t) dict)
 -- of the word given.
 
 shiritoriHard (ContinueGame (h:t) dict)
-  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryHard dict h (h:t)) = if null x then "YOUWIN" else head x
+  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryHard dict h (h:t)) = if null x then computerlose else head x
   | otherwise = cheater
 
 -- test:
