@@ -99,7 +99,10 @@ lohl = ['b','f','g','h','j','k','l','q','r','u','v','w','x','y','z']
 cheater = "CheaterFound"
 
 -- Returns the Computer loses text
-computerlose = "PlayerWins"
+computerLose = "PlayerWins"
+
+-- Returns the "No input from player" if player did not input a text.
+noInput = "No input from player"
 
 -- FUNCTIONS
 
@@ -108,9 +111,9 @@ computerlose = "PlayerWins"
 -- of the word given.
 -- ContinueGame = (CountinueGame [where first word is the given word] [])
 -- TODO: ALSO remember to put in the given computer word into the list of used words.
-
+shiritoriEasy (ContinueGame [] _) = noInput
 shiritoriEasy (ContinueGame (h:t) dict)
-  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryEasy dict h (h:t)) = if null x then computerlose else head x
+  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryEasy dict h (h:t)) = if null x then computerLose else head x
   | otherwise = cheater
 
 -- test:
@@ -130,9 +133,9 @@ shiritoriEasy (ContinueGame (h:t) dict)
 -- shiritoriHard (ContinueGame louw dict)
 -- Returns an unused hard word from the dictionary corresponding to the beginning letter
 -- of the word given.
-
+shiritoriHard (ContinueGame [] _) = noInput
 shiritoriHard (ContinueGame (h:t) dict)
-  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryHard dict h (h:t)) = if null x then computerlose else head x
+  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryHard dict h (h:t)) = if null x then computerLose else head x
   | otherwise = cheater
 
 -- test:
