@@ -13,60 +13,6 @@ module Shiritori where
 
 -- INTRUCTIONS: READFIRST!
 
----- PLAY
-
--- start the game
-play genre difficulty =
-    do
-        putStrLn "Play first? 0=no, 1=yes"
-        line <- getLine
-        if (read line :: Int) == 1
-        then
-            player_play (shiritori Start (choose genre)) difficulty
-        else if (read line :: Int) == 0
-            then
-                computer_play (shiritori Start (choose genre)) difficulty
-            else
-                putStrLn "Invalid choice."
-
--- takes the player's move and advances the game
-player_play (ContinueGame state avail) difficulty =
-    do
-        putStrLn ("Input your next move.")
-        line <- getLine
-        computer_play (shiritori (Move (read line :: AMove) state) avail) difficulty
-
--- TODO : choose move depending on difficulty, call player_play to continue game
-computer_play (ContinueGame state avail) difficulty =
-    do
-        putStrLn ("fjdkslf")
-
----- SHIRITORI
-
--- a move for a player
-type AMove = String
-
--- Add move to list of moves made, or the starting state
-data Action = Move AMove [AMove] | Start
-
--- end of game or continue with new state and possible moves
-data Result = EndOfGame Int | ContinueGame [AMove] [String] deriving (Eq, Show)
-
--- the Shiritori game
-shiritori Start lst = ContinueGame [] lst
-
-shiritori (Move move moves) lst
-    | cheat move moves lst == True = EndOfGame 1
-    | otherwise = ContinueGame (move:moves) lst
-
--- chooses the list of words depending on the genre
-choose genre
-    | genre == "countries" = loc
-    | genre == "animals" = loa
-    | otherwise = low
-
--- test if cheating
-cheat move moves lst = True
 
 -- STATIC VARIABLES
 -- List of countries
@@ -105,6 +51,65 @@ computerLose = "PlayerWins"
 noInput = "No input from player"
 
 -- FUNCTIONS
+
+---- PLAY
+
+-- play :: [Char] -> [Char] -> IO [Char]
+-- starts a Shiritori game
+play genre difficulty =
+    do
+        putStrLn "Play first? 0=no, 1=yes"
+        line <- getLine
+        if (read line :: Int) == 1
+        then
+            player_play (shiritori Start (choose genre)) difficulty
+        else if (read line :: Int) == 0
+            then
+                computer_play (shiritori Start (choose genre)) difficulty
+            else
+                putStrLn "Invalid choice."
+
+-- player_play :: Result -> [Char] -> IO [Char]
+-- takes the player's move and advances the game
+player_play (ContinueGame state avail) difficulty =
+    do
+        putStrLn ("Input your next move.")
+        line <- getLine
+        computer_play (shiritori (Move (read line :: AMove) state) avail) difficulty
+
+-- computer_play :: Result -> [Char] -> IO [Char]
+-- TODO : choose move depending on difficulty, call player_play to continue game
+computer_play (ContinueGame state avail) difficulty =
+    do
+        putStrLn ("fjdkslf")
+
+---- SHIRITORI
+
+-- a move for a player
+type AMove = String
+
+-- Add move to list of moves made, or the starting state
+data Action = Move AMove [AMove] | Start
+
+-- end of game or continue with new state and possible moves
+data Result = EndOfGame Int | ContinueGame [AMove] [String] deriving (Eq, Show)
+
+-- shiritori :: Action -> Result
+-- the Shiritori game
+shiritori Start lst = ContinueGame [] lst
+shiritori (Move move moves) lst
+    | cheat move moves lst == True = EndOfGame 1
+    | otherwise = ContinueGame (move:moves) lst
+
+-- choose :: [Char] -> [[Char]]
+-- chooses the list of words depending on the genre
+choose genre
+    | genre == "countries" = loc
+    | genre == "animals" = loa
+    | otherwise = low
+
+-- test if cheating
+cheat move moves lst = True
 
 -- shiritoriEasy (ContinueGame louw dict)
 -- Returns an unused easy word from the dictionary corresponding to the beginning letter
