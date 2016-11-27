@@ -50,40 +50,7 @@ computerLose = "PlayerWins"
 -- Returns the "No input from player" if player did not input a text.
 noInput = "No input from player"
 
--- FUNCTIONS
-
----- PLAY
-
--- play :: [Char] -> [Char] -> IO [Char]
--- starts a Shiritori game
-play genre difficulty =
-    do
-        putStrLn "Play first? 0=no, 1=yes"
-        line <- getLine
-        if (read line :: Int) == 1
-        then
-            player_play (shiritori Start (choose genre)) difficulty
-        else if (read line :: Int) == 0
-            then
-                computer_play (shiritori Start (choose genre)) difficulty
-            else
-                putStrLn "Invalid choice."
-
--- player_play :: Result -> [Char] -> IO [Char]
--- takes the player's move and advances the game
-player_play (ContinueGame state avail) difficulty =
-    do
-        putStrLn ("Input your next move.")
-        line <- getLine
-        computer_play (shiritori (Move (read line :: AMove) state) avail) difficulty
-
--- computer_play :: Result -> [Char] -> IO [Char]
--- TODO : choose move depending on difficulty, call player_play to continue game
-computer_play (ContinueGame state avail) difficulty =
-    do
-        putStrLn ("fjdkslf")
-
----- SHIRITORI
+-- TYPES
 
 -- a move for a player
 type AMove = String
@@ -92,24 +59,68 @@ type AMove = String
 data Action = Move AMove [AMove] | Start
 
 -- end of game or continue with new state and possible moves
-data Result = EndOfGame Int | ContinueGame [AMove] [String] deriving (Eq, Show)
+data Result = EndGame Int | ContinueGame [AMove] [String] deriving (Eq, Show)
 
--- shiritori :: Action -> Result
--- the Shiritori game
-shiritori Start lst = ContinueGame [] lst
-shiritori (Move move moves) lst
-    | cheat move moves lst == True = EndOfGame 1
-    | otherwise = ContinueGame (move:moves) lst
+-- FUNCTIONS
 
--- choose :: [Char] -> [[Char]]
--- chooses the list of words depending on the genre
-choose genre
+---- PLAY
+
+-- play :: IO [Char]
+-- starts a Shiritori game
+play genre difficulty = 
+    player_play (shiritori Start (chooseDict genre)) difficulty
+
+-- chooseDict :: [Char] -> [[Char]]
+-- chooses the dictionary to use depending on the genre
+chooseDict genre
     | genre == "countries" = loc
     | genre == "animals" = loa
     | otherwise = low
 
--- test if cheating
-cheat move moves lst = True
+-- player_play :: Result -> [Char] -> IO [Char]
+-- takes the player's move and advances the game
+player_play (EndGame code) difficulty = end_game (EndGame code)
+player_play (ContinueGame state dict) difficulty =
+    do
+        putStrLn ("Input your next move.")
+        line <- getLine
+        computer_play (shiritori (Move (read line :: AMove) state) dict) difficulty
+
+-- computer_play :: Result -> [Char] -> IO [Char]
+-- generates a move and advances the game
+computer_play (EndGame code) difficulty = end_game (EndGame code)
+computer_play (ContinueGame state dict) difficulty =
+    do
+        let move = if difficulty == "hard" then shiritoriHard (ContinueGame state dict) else shiritoriEasy (ContinueGame state dict)
+        putStrLn ("Computer's move: " ++ move)
+        player_play (shiritori (Move move state) dict) difficulty
+
+-- end_game :: IO [char]
+-- returns a message to the user given the game end code
+end_game (EndGame code)
+    | code == 1 = putStrLn (computerLose)
+    | otherwise = putStrLn (cheater)
+
+---- SHIRITORI
+
+-- shiritori :: Action -> Result
+-- the Shiritori game
+shiritori Start dict = ContinueGame [] dict
+shiritori (Move move moves) dict
+    | cheat move moves dict == True = EndGame 0
+    | otherwise = ContinueGame (move:moves) dict
+
+-- Cheat :: [Char] -> [[Char]] -> [[Char]] -> Bool
+-- test if cheating or valid move
+cheat move [] _ = False
+cheat move moves dict = not (checkWordUsed moves move && checkWordInDictionary dict move && head move == last (head moves))
+
+-- test: 
+-- cheat "algeria" [] [] = False
+-- cheat "algeria" ["algeria"] loc = True
+-- cheat "a" [] loc = False
+-- cheat "hatch" ["hunch","high"] low = True
+-- cheat "hatch" ["hatch", "high"] low = False
 
 -- shiritoriEasy (ContinueGame louw dict)
 -- Returns an unused easy word from the dictionary corresponding to the beginning letter
