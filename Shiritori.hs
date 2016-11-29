@@ -91,9 +91,10 @@ player_play (ContinueGame state dict) difficulty =
 computer_play (EndGame code) difficulty = end_game (EndGame code)
 computer_play (ContinueGame state dict) difficulty =
     do
-        -- let move = if difficulty == "hard" then shiritoriHard (ContinueGame state dict) else shiritoriEasy (ContinueGame state dict)
-        -- putStrLn ("Computer's move: " ++ move)
-        player_play (ContinueGame state dict) difficulty
+        let result = if difficulty == "hard" then shiritoriHard (ContinueGame state dict) else shiritoriEasy (ContinueGame state dict)
+        case result of (ContinueGame state dict) -> putStrLn ("Computer's move: " ++ head state ++ ".")
+                       (EndGame int) -> putStrLn ("Computer has no move.")
+        player_play result difficulty
 
 -- end_game :: IO [char]
 -- returns a message to the user given the game end code
@@ -112,11 +113,12 @@ shiritori (Move move moves) dict
 
 -- Cheat :: [Char] -> [[Char]] -> [[Char]] -> Bool
 -- test if cheating or valid move
-cheat move [] _ = False
+cheat move [] dict = not (checkWordInDictionary dict move)
 cheat move moves dict = not (checkWordUsed moves move && checkWordInDictionary dict move && head move == last (head moves))
 
 -- test:
--- cheat "algeria" [] [] = False
+-- cheat "algeria" [] [] = True
+-- cheat "algeria" [] loc = False
 -- cheat "algeria" ["algeria"] loc = True
 -- cheat "a" [] loc = False
 -- cheat "hatch" ["hunch","high"] low = True
