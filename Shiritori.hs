@@ -91,9 +91,9 @@ player_play (ContinueGame state dict) difficulty =
 computer_play (EndGame code) difficulty = end_game (EndGame code)
 computer_play (ContinueGame state dict) difficulty =
     do
-        let move = if difficulty == "hard" then shiritoriHard (ContinueGame state dict) else shiritoriEasy (ContinueGame state dict)
-        putStrLn ("Computer's move: " ++ move)
-        player_play (shiritori (Move move state) dict) difficulty
+        -- let move = if difficulty == "hard" then shiritoriHard (ContinueGame state dict) else shiritoriEasy (ContinueGame state dict)
+        -- putStrLn ("Computer's move: " ++ move)
+        player_play (ContinueGame state dict) difficulty
 
 -- end_game :: IO [char]
 -- returns a message to the user given the game end code
