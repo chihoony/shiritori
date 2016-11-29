@@ -83,8 +83,8 @@ player_play (EndGame code) difficulty = end_game (EndGame code)
 player_play (ContinueGame state dict) difficulty =
     do
         putStrLn ("Input your next move.")
-        line <- getLine
-        computer_play (shiritori (Move (read line :: AMove) state) dict) difficulty
+        move <- getLine
+        computer_play (shiritori (Move move state) dict) difficulty
 
 -- computer_play :: Result -> [Char] -> IO [Char]
 -- generates a move and advances the game
