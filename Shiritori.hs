@@ -67,7 +67,7 @@ data Result = EndGame Int | ContinueGame [AMove] [String] deriving (Eq, Show)
 
 -- play :: IO [Char]
 -- starts a Shiritori game
-play genre difficulty = 
+play genre difficulty =
     player_play (shiritori Start (chooseDict genre)) difficulty
 
 -- chooseDict :: [Char] -> [[Char]]
@@ -115,7 +115,7 @@ shiritori (Move move moves) dict
 cheat move [] _ = False
 cheat move moves dict = not (checkWordUsed moves move && checkWordInDictionary dict move && head move == last (head moves))
 
--- test: 
+-- test:
 -- cheat "algeria" [] [] = False
 -- cheat "algeria" ["algeria"] loc = True
 -- cheat "a" [] loc = False
@@ -153,6 +153,12 @@ shiritoriHard (ContinueGame [] _) = noInput
 shiritoriHard (ContinueGame (h:t) dict)
   | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryHard dict h (h:t)) = if null x then computerLose else head x
   | otherwise = cheater
+
+-- NOT Working because of type error.
+-- shiritoriHard (ContinueGame (h:t) dict) =
+--   do
+--     let x = (findWordsInDictionaryHard dict h (h:t))
+--     if null x then EndGame 1 else Continuegame ((head x):h:t) dict
 
 -- test:
 -- shiritoriHard (ContinueGame ["hello","hellb"]                                          ["hello","hellb","back","ohmaz"])
