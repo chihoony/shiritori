@@ -113,6 +113,7 @@ shiritori (Move move moves) dict
 
 -- Cheat :: [Char] -> [[Char]] -> [[Char]] -> Bool
 -- test if cheating or valid move
+cheat [] _ _ = True
 cheat move [] dict = not (checkWordInDictionary dict move)
 cheat move moves dict = not (checkWordUsed moves move && checkWordInDictionary dict move && head move == last (head moves))
 
