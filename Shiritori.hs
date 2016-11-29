@@ -127,10 +127,15 @@ cheat move moves dict = not (checkWordUsed moves move && checkWordInDictionary d
 -- of the word given.
 -- ContinueGame = (CountinueGame [where first word is the given word] [])
 -- TODO: ALSO remember to put in the given computer word into the list of used words.
-shiritoriEasy (ContinueGame [] _) = noInput
-shiritoriEasy (ContinueGame (h:t) dict)
-  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryEasy dict h (h:t)) = if null x then computerLose else head x
-  | otherwise = cheater
+-- shiritoriEasy (ContinueGame [] _) = noInput
+-- shiritoriEasy (ContinueGame (h:t) dict)
+--   | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryEasy dict h (h:t)) = if null x then computerLose else head x
+--   | otherwise = cheater
+
+shiritoriEasy (ContinueGame (h:t) dict) =
+  do
+    let x = (findWordsInDictionaryEasy dict h (h:t))
+    if null x then EndGame 1 else ContinueGame ((head x):h:t) dict
 
 -- test:
 -- shiritoriEasy (ContinueGame ["hello","hellb"]                                          ["hello","hellb","back","ohman"])
@@ -149,16 +154,15 @@ shiritoriEasy (ContinueGame (h:t) dict)
 -- shiritoriHard (ContinueGame louw dict)
 -- Returns an unused hard word from the dictionary corresponding to the beginning letter
 -- of the word given.
-shiritoriHard (ContinueGame [] _) = noInput
-shiritoriHard (ContinueGame (h:t) dict)
-  | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryHard dict h (h:t)) = if null x then computerLose else head x
-  | otherwise = cheater
+-- shiritoriHard (ContinueGame [] _) = noInput
+-- shiritoriHard (ContinueGame (h:t) dict)
+--   | checkWordUsed t h && checkWordInDictionary dict h, let x = (findWordsInDictionaryHard dict h (h:t)) = if null x then computerLose else head x
+--   | otherwise = cheater
 
--- NOT Working because of type error.
--- shiritoriHard (ContinueGame (h:t) dict) =
---   do
---     let x = (findWordsInDictionaryHard dict h (h:t))
---     if null x then EndGame 1 else Continuegame ((head x):h:t) dict
+shiritoriHard (ContinueGame (h:t) dict) =
+  do
+    let x = (findWordsInDictionaryHard dict h (h:t))
+    if null x then EndGame 1 else ContinueGame ((head x):h:t) dict
 
 -- test:
 -- shiritoriHard (ContinueGame ["hello","hellb"]                                          ["hello","hellb","back","ohmaz"])
