@@ -12,6 +12,28 @@
 module Shiritori where
 
 -- INTRUCTIONS: READFIRST!
+-- Before starting the game things you need to know:
+--   *Every input you put in should be in lowercase with no white space in between words.
+--   *Words cannot be repeated, by you, by the computer, by no one.
+--   *You lose if you enter a word not in the genre or you repeat a word that has already been inputted.
+--   *You win if the computer can't find a word to return after your valid input, corresponding to the diffculty restrictions.
+--   There are the specific genre types you can play:
+--     i.    allwords
+--     ii.   countries
+--     iii.  animals
+--   And there are different diffculty levels you can play:
+--     i.    easy
+--     ii.   hard
+-- Now, playing/starting the game:
+--   1. Start the game with the following input:
+--       play ___genre___ ___difficulty___
+--       *but replace genre and difficulty with the specific genre and level you would like to play from the list provided above
+--   2. Game has been initiated with your inputted genre and diffulty level
+--   3. Enter your first word, corresponding to the genre.
+--   4. Wait for the computer to respond.
+--   5. Depending on the computer response you may have either won, lost, or have to continue the game:
+--       Continuing the game: input a word that starts with the last letter the computer outputted while taking into consideration the specific genre type.
+
 
 
 -- STATIC VARIABLES
