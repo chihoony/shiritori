@@ -1,3 +1,4 @@
+-- http://wiki.ubc.ca/Course:CPSC312-2016-Project2-Shiritori
 -- Edward Lee
 -- e9o8
 -- 36716124
