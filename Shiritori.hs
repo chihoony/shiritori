@@ -26,13 +26,15 @@ module Shiritori where
 --     ii.   hard
 -- Now, playing/starting the game:
 --   1. Start the game with the following input:
---       play ___genre___ ___difficulty___
---       *but replace genre and difficulty with the specific genre and level you would like to play from the list provided above
+--        play "___genre___" "___difficulty___"
+--        *but replace genre and difficulty with the specific genre and level you would like to play from the list provided above
+--        example: play "countries" "easy"
 --   2. Game has been initiated with your inputted genre and diffulty level
 --   3. Enter your first word, corresponding to the genre.
+--        example: canada
 --   4. Wait for the computer to respond.
 --   5. Depending on the computer response you may have either won, lost, or have to continue the game:
---       Continuing the game: input a word that starts with the last letter the computer outputted while taking into consideration the specific genre type.
+--        Continuing the game: input a word that starts with the last letter the computer outputted while taking into consideration the specific genre type.
 
 
 
